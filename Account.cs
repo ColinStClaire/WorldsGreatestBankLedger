@@ -108,7 +108,7 @@ namespace WGBL {
                 while ((record = sr.ReadLine()) != null) {
                     account = JsonConvert.DeserializeObject<_Account>(record);
                     if (account.OwnerName == ownerName && account.Pin == PIN) {
-                        gotAccount = new Account() {
+                        return new Account() {
                             Id = account.Id,
                             OwnerName = account.OwnerName,
                             Pin = account.Pin,
@@ -118,7 +118,7 @@ namespace WGBL {
                     }
                 }
             }
-            return gotAccount;
+            return null;
         }
 
         private void UpdateBalance(float newBalance) {

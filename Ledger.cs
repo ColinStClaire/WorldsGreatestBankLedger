@@ -67,7 +67,31 @@ namespace WGBL {
                     break;
             }
         }
+        
+        public static void Deposit(Account account) {
+            Console.WriteLine("Enter deposit amount: ");
+            var transAmt = Console.ReadLine();
+            Console.WriteLine("Enter transaction description: ");
+            var depDesc = Console.ReadLine();
+            account.Deposit(transAmt, depDesc);
+            Console.WriteLine("Desposit successful\n");
+        }
 
+        public static void Withdrawl(Account account) {
+            Console.WriteLine("Enter withdrawl amount: ");
+            var transAmt = Console.ReadLine();
+            Console.WriteLine("Enter transaction description: ");
+            var withDesc = Console.ReadLine();
+            try {
+                account.Withdrawl(transAmt, withDesc);
+            } catch (ApplicationException ex) {
+                Console.WriteLine(ex);
+                Console.WriteLine("Choose a smaller value");
+                Withdrawl(account);
+            } finally {
+                Console.WriteLine("Withdrawl successful\n");
+            }
+        }
         public static void ActionPrompt(Account account) {
             Console.WriteLine(
                 "Select from the following actions: \n" + 
@@ -77,23 +101,12 @@ namespace WGBL {
                 "(4) ---- See transaction history \n" +
                 "(5) ---- Log out");
             var workflowOption = Console.ReadLine();
-            String transAmt = "";
             switch (workflowOption) {
                 case "1":
-                    Console.WriteLine("Enter deposit amount: ");
-                    transAmt = Console.ReadLine();
-                    Console.WriteLine("Enter transaction description: ");
-                    var depDesc = Console.ReadLine();
-                    account.Deposit(transAmt, depDesc);
-                    Console.WriteLine("Desposit successful\n");
+                    Deposit(account);
                     break;
                 case "2":
-                    Console.WriteLine("Enter withdrawl amount: ");
-                    transAmt = Console.ReadLine();
-                    Console.WriteLine("Enter transaction description: ");
-                    var withDesc = Console.ReadLine();
-                    account.Withdrawl(transAmt, withDesc);
-                    Console.WriteLine("Withdrawl successful\n");
+                    Withdrawl(account);
                     break;
                 case "3":
                     account.CheckBalance();
@@ -113,7 +126,9 @@ namespace WGBL {
         }
 
         public static Account AccountPrompt() {
-            Console.WriteLine("Select (1) to login or (2) to create a new account");
+            Console.WriteLine("Select from the following actions:\n" +
+                "(1) ---- Login to your account\n" +
+                "(2) ---- Create a new account");
             var workflowOption = Console.ReadLine();
             Account account = null;
             switch (workflowOption) {
