@@ -56,7 +56,7 @@ namespace WGBL {
                 Description = description,
             };
             this.SessionTransactions.Add(newTrans);
-            UpdateBalance(newTrans.FromAccountId, this.Balance);
+            this.UpdateBalance(this.Balance);
             Transaction.SaveTransaction(newTrans);
         }
 
@@ -72,7 +72,7 @@ namespace WGBL {
                 Description = description,
             };
             this.SessionTransactions.Add(transaction);
-            UpdateBalance(transaction.ToAccountId, this.Balance);
+            this.UpdateBalance(this.Balance);
             Transaction.SaveTransaction(transaction);
         }
 
@@ -92,8 +92,7 @@ namespace WGBL {
             };
             string json = JsonConvert.SerializeObject(toSave);
             Console.WriteLine($"Saved new account for: {newOwner}\n");
-            var dbPath = 
-                "/Users/i869673/Code/WGBL/Database/Accounts.txt";
+            var dbPath = this.DataBasePath;
             //  save to file
             using (StreamWriter accountDbFile = File.AppendText(dbPath)) {
                 accountDbFile.WriteLine(json);
@@ -102,10 +101,9 @@ namespace WGBL {
 
         public static Account GetAccount(String ownerName, String PIN) {
             String record;
-            Account gotAccount = null;
+            Account gotAccount = new Account();
             _Account account = null;
-            var dbPath = 
-                "/Users/i869673/Code/WGBL/Database/Accounts.txt";
+            var dbPath = gotAccount.DataBasePath;
             using (var sr = new StreamReader(dbPath)) {
                 while ((record = sr.ReadLine()) != null) {
                     account = JsonConvert.DeserializeObject<_Account>(record);
@@ -123,15 +121,14 @@ namespace WGBL {
             return gotAccount;
         }
 
-        private static void UpdateBalance(String accountId, float newBalance) {
+        private void UpdateBalance(float newBalance) {
             String record;
             _Account account = null;
-            var dbPath = 
-                "/Users/i869673/Code/WGBL/Database/Accounts.txt";
+            var dbPath = this.DataBasePath;
             using (var sr = new StreamReader(dbPath)) {
                 while ((record = sr.ReadLine()) != null) {
                     account = JsonConvert.DeserializeObject<_Account>(record);
-                    if (account.Id == accountId) {
+                    if (account.Id == this.Id) {
                         break;
                     }
                 }
